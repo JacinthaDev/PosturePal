@@ -1,11 +1,65 @@
-<%- include('partials/header') -%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PosturePal</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="../imgs/stretch.png"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <script src="https://kit.fontawesome.com/ea19d3d339.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <main>
+        <nav class="main-menu">
+        <a href="/profile"><img class="logo" src="../imgs/stretch.png" alt="PosturePal logo" /></a>
+        <ul>
+            <li class="nav-item active">
+            <b></b>
+            <b></b>
+            <a href="#">
+                <i class="fa fa-house nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </a>
+            </li>
+        </ul>
+        </nav>
 
-<main class="container">
-    <div class="row justify-content-around mt-5">
-        <a href="/login" class="col-3 btn btn-primary"> Login</a>
-        <a href="/signup" class="col-3 btn btn-primary"> Signup</a>
-    </div>
-</main>
-    
-
-<%- include('partials/footer') -%>
+        <section class="content">
+            
+            <div class="login-container">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="company">
+                        <img class="logo" src="../imgs/stretch.png" alt="PosturePal logo" />
+                        <h1>Welcome to PosturePal</h1>
+                        <p class="slogan">Better Posture, Better Performance</p>
+                    </div>
+                    <h1><span class="fa fa-sign-in"></span> Login</h1>
+                    <!-- LOGIN FORM -->
+                    <form action="/login" method="post">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="password">
+                        </div>
+                
+                        <button type="submit" class="btn btn-warning btn-lg">Login</button>
+                    </form>
+                
+                    <hr>
+                
+                    <p>Need an account? <a href="/signup">Signup</a></p>
+                    <p>Or go <a href="/">home</a>.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="../js/script.js"></script>
+</body>
+</html>

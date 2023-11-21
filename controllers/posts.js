@@ -1,5 +1,5 @@
-const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
+const Schedule = require("../models/Schedule");
 const Comments = require("../models/Comments");
 
 module.exports = {
@@ -13,10 +13,10 @@ module.exports = {
       console.log(err);
     }
   },
-  getFeed: async (req, res) => {
+  getSchedule: async (req, res) => {
     try {
       const posts = await Post.find().sort({ createdAt: "desc" }).lean();
-      res.render("feed.ejs", { posts: posts });
+      res.render("schedule.ejs", { posts: posts, user: req.user });
     } catch (err) {
       console.log(err);
     }
@@ -30,21 +30,17 @@ module.exports = {
       console.log(err);
     }
   },
-  createPost: async (req, res) => {
+  createSchedule: async (req, res) => {
     try {
-      // Upload image to cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path);
-
-      await Post.create({
-        title: req.body.title,
-        image: result.secure_url,
-        cloudinaryId: result.public_id,
-        caption: req.body.caption,
-        likes: 0,
+      await Schedule.create({
+        days: req.body.workDays,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+        frequency: req.body.frequency,
         user: req.user.id,
       });
-      console.log("Post has been added!");
-      res.redirect("/profile");
+      console.log("Schedule has been added!");
+      res.redirect("/schedule");
     } catch (err) {
       console.log(err);
     }

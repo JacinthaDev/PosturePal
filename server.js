@@ -56,7 +56,11 @@ app.use(flash());
 //Setup Routes For Which The Server Is Listening
 app.use("/", mainRoutes);
 app.use("/login", mainRoutes);
+app.use("/signup", mainRoutes);
 app.use("/post", postRoutes);
+app.use("/schedule", postRoutes);
+
+
 
 //Server Running
 app.listen(process.env.PORT, () => {

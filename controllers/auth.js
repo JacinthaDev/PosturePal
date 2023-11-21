@@ -4,10 +4,11 @@ const User = require("../models/User");
 
 exports.getLogin = (req, res) => {
   if (req.user) {
-    return res.redirect("/profile");
+    return res.redirect("/profile2");
   }
-  res.render("login", {
-    title: "Login",
+  req.flash("User not found", { msg: "Try again or create an account" });
+  res.render("index.ejs", {
+    title: "Home Page",
   });
 };
 
@@ -57,9 +58,9 @@ exports.logout = (req, res) => {
 };
 
 exports.getSignup = (req, res) => {
-  if (req.user) {
-    return res.redirect("/profile");
-  }
+  // if (req.user) {
+  //   return res.redirect("/profile");
+  // }
   res.render("signup", {
     title: "Create Account",
   });

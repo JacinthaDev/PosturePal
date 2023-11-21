@@ -1,0 +1,53 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+#workScheduleForm {
+    max-width: 400px;
+    margin: 3rem auto;
+}
+
+#workScheduleForm label, 
+#workScheduleForm select, 
+#workScheduleForm input, 
+#workScheduleForm button {
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+#workScheduleForm label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#workScheduleForm select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow:auto;
+}
+
+#workScheduleForm input[type="time"],
+#workScheduleForm input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#workScheduleForm button {
+    padding: 10px;
+    background-color: rgb(206, 194, 240);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#workScheduleForm button:hover {
+    background-color: rgb(70, 58, 110);
+}
+
+

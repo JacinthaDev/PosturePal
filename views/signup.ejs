@@ -1,17 +1,50 @@
-<%- include('partials/header') -%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PosturePal</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="../imgs/stretch.png"/>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/signup.css">
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <script src="https://kit.fontawesome.com/ea19d3d339.js" crossorigin="anonymous"></script>
+</head>
+  <body>
+    <main>
+      <nav class="main-menu">
+      <a href="/profile"><img class="logo" src="../imgs/stretch.png" alt="PosturePal logo" /></a>
+      <ul>
+          <li class="nav-item active">
+            <b></b>
+            <b></b>
+            <a href="/">
+                <i class="fa fa-house nav-icon"></i>
+                <span class="nav-text">Home</span>
+            </a>
+          </li>
+      </ul>
+      </nav>
     <main class="container">
-        <div class="row justify-content-center">
-            <section class="col-6 mt-5">
-                <% if (locals.messages.errors) { %>
-                    <% messages.errors.forEach( el => { %>
-                        <div class="alert alert-danger"><%= el.msg %></div>
-                    <% }) %>    
-                <% } %>
-                <% if (locals.messages.info) { %>
-                    <% messages.info.forEach( el => { %>
-                        <div class="alert alert-info"><%= el.msg %></div>
-                    <% }) %>    
-                <% } %>
+      <div class="row justify-content-center">
+          <section class="col-6 mt-5">
+              <% if (locals.messages.errors) { %>
+                  <% messages.errors.forEach( el => { %>
+                      <div class="alert alert-danger"><%= el.msg %></div>
+                  <% }) %>    
+              <% } %>
+              <% if (locals.messages.info) { %>
+                  <% messages.info.forEach( el => { %>
+                      <div class="alert alert-info"><%= el.msg %></div>
+                  <% }) %>    
+              <% } %>
+              <div class="company">
+                <img class="logo" src="../imgs/stretch.png" alt="PosturePal logo" />
+                <h1>Welcome to PosturePal</h1>
+                <p class="slogan">Better Posture, Better Performance</p>
+              </div>
                 <form action="/signup" method="POST">
                     <div class="mb-3">
                         <label for="userName" class="form-label">User Name</label>
@@ -34,6 +67,8 @@
                   </form>
             </section>
         </div>
+      </main>
     </main>
-
-<%- include('partials/footer') -%>
+  <script src="../js/script.js"></script>
+  </body>
+</html>

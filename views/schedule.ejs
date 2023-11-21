@@ -8,17 +8,19 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../imgs/stretch.png"/>
     <script src="https://kit.fontawesome.com/ea19d3d339.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/scheduleForm.css" />
+    <link rel="stylesheet" href="/css/schedule.css" />
 </head>
 <body>
     <main>
         <nav class="main-menu">
         <h1>Fitness App</h1>
-        <a href="/profile"><img class="logo" src="../imgs/stretch.png" alt="PosturePal logo" /></a>
+        <a href="/profile"><img class="logo" src="../imgs/stretch.png" alt="PosturePal ogo" /></a>
         <ul>
             <li class="nav-item active">
             <b></b>
             <b></b>
-            <a href="#">
+            <a href="/profile">
                 <i class="fa fa-house nav-icon"></i>
                 <span class="nav-text">Home</span>
             </a>
@@ -54,7 +56,7 @@
             <li class="nav-item">
             <b></b>
             <b></b>
-            <a href="/">
+            <a href="#">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span class="nav-text">Settings</span>
             </a>
@@ -64,7 +66,7 @@
 
         <section class="content">
         <div class="left-content">
-            <div class="activities">
+            <!-- <div class="activities">
             <h1>Popular Activities</h1>
             <div class="activity-container">
                 <div class="image-container img-one">
@@ -109,11 +111,36 @@
                 </div>
                 </div>
             </div>
-            </div>
+            </div> -->
 
+            
             <div class="left-bottom">
             <div class="weekly-schedule">
-                <h1>Weekly Schedule</h1>
+                <h1 class ='center'>Weekly Schedule</h1>
+                <form action="/schedule" id="workScheduleForm" method="POST">
+                    <label for="workDays">Select Work Days:</label>
+                    <select id="workDays" name="workDays[]" multiple>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                
+                    <label for="startTime">Work Start Time:</label>
+                    <input type="time" id="startTime" name="startTime">
+                
+                    <label for="endTime">Work End Time:</label>
+                    <input type="time" id="endTime" name="endTime">
+                
+                    <label for="frequency">Reminders per Day:</label>
+                    <input type="number" id="frequency" name="frequency" min="1">
+                
+                    <button type="submit">Submit</button>
+                </form>
+    <!--             
                 <div class="calendar">
                 <div class="day-and-activity activity-one">
                     <div class="day">
@@ -180,7 +207,7 @@
                     </div>
                     <button class="btn">Join</button>
                 </div>
-                </div>
+                </div> -->
             </div>
 
             <div class="personal-bests">
