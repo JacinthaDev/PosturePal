@@ -2,6 +2,16 @@ const Post = require("../models/Post");
 const Schedule = require("../models/Schedule");
 const Comments = require("../models/Comments");
 
+function convertTo12Hour(time) {
+  let [hours, minutes] = time.split(':');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  return hours + ':' + minutes + ' ' + ampm;
+}
+
+
+
 module.exports = {
   getProfile: async (req, res) => {
     try {
@@ -15,17 +25,18 @@ module.exports = {
   },
   getSchedule: async (req, res) => {
     try {
-      const posts = await Post.find().sort({ createdAt: "desc" }).lean();
-      res.render("schedule.ejs", { posts: posts, user: req.user });
+      const schedule = await Schedule.find({user: req.user.id }).lean();
+      const startTime12hr = convertTo12Hour(schedule[0].startTime);
+      const endTime12hr = convertTo12Hour(schedule[0].endTime);
+      res.render("schedule.ejs", {schedule: schedule, user: req.user, startTime:startTime12hr, endTime:endTime12hr});
     } catch (err) {
       console.log(err);
     }
   },
-  getPost: async (req, res) => {
+  getStretches: async (req, res) => {
     try {
-      const post = await Post.findById(req.params.id);
-      const comments = await Comments.find({postID: req.params.id});
-      res.render("post.ejs", { post: post, comments: comments, user: req.user });
+      const schedule = await Schedule.find({user: req.user.id }).lean();
+      res.json(schedule);
     } catch (err) {
       console.log(err);
     }
@@ -37,9 +48,38 @@ module.exports = {
         startTime: req.body.startTime,
         endTime: req.body.endTime,
         frequency: req.body.frequency,
+        minutes: req.body.minutes,
         user: req.user.id,
       });
       console.log("Schedule has been added!");
+      res.redirect("/schedule");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  updateSchedule: async (req, res) => {
+    try {
+
+      let scheduleObject ={         
+        days: req.body.workDays,
+        frequency: req.body.frequency,
+        minutes: req.body.minutes, 
+      }
+
+      if(req.body.endTime > req.body.startTime){
+        scheduleObject.startTime = req.body.startTime
+        scheduleObject.endTime = req.body.endTime
+      } else{
+        req.flash("Invalide start/end time", { msg: "End time cannot be less than start time" });
+      }
+
+      await Schedule.findOneAndUpdate(
+        {user: req.user.id },
+        {
+          $set: scheduleObject,
+        }
+      );
+      console.log("Schedule has been updated!");
       res.redirect("/schedule");
     } catch (err) {
       console.log(err);

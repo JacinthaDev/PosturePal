@@ -17,7 +17,7 @@
         <h1>Fitness App</h1>
         <a href="/profile"><img class="logo" src="../imgs/stretch.png" alt="PosturePal ogo" /></a>
         <ul>
-            <li class="nav-item active">
+            <li class="nav-item">
             <b></b>
             <b></b>
             <a href="/profile">
@@ -35,7 +35,7 @@
             </a>
             </li>
 
-            <li class="nav-item">
+            <li class="nav-item active">
             <b></b>
             <b></b>
             <a href="/schedule">
@@ -113,13 +113,58 @@
             </div>
             </div> -->
 
-            
+        <%if(schedule.length === 1){ %> 
+            <div class="user-schedule-display">
+                <h2>Your Weekly Schedule</h2>
+                <div id="scheduleDisplay">
+                    <!-- This is where the submitted schedule information will be displayed -->
+                    <form action="/editSchedule?_method=PUT" method="POST">
+                        <ul>
+                            <li>
+                                <span id="displayWorkDays">Work Days: <%= schedule[0].days %></span>
+                                <button type="button" class="edit">Edit</button>
+                                <select class="hidden" id="workDays" name="workDays[]" multiple>
+                                    <option <% if(schedule[0].days.includes('Monday')) { %> selected<%} %> value="Monday">Monday</option>
+                                    <option  <% if(schedule[0].days.includes('Tuesday')) { %> selected<%} %> value="Tuesday">Tuesday</option>
+                                    <option <% if(schedule[0].days.includes('Wednesday')) { %> selected<%} %> value="Wednesday">Wednesday</option>
+                                    <option <% if(schedule[0].days.includes('Thursday')) { %> selected<%} %> value="Thursday">Thursday</option>
+                                    <option <% if(schedule[0].days.includes('Friday')) { %> selected<%} %> value="Friday">Friday</option>
+                                    <option <% if(schedule[0].days.includes('Saturday')) { %> selected<%} %> value="Saturday">Saturday</option>
+                                    <option <% if(schedule[0].days.includes('Sunday')) { %> selected<%} %> value="Sunday">Sunday</option>
+                                </select>
+                            </li>
+                            <li>
+                                <span id="displayStartTime">Start Time: <%= startTime %></span>
+                                <button type="button" class="edit">Edit</button>
+                                <input class="hidden" type="time" id="startTime" name="startTime" value="<%= schedule[0].startTime %>">
+                            </li>
+                            <li>
+                                <span id="displayEndTime">End Time: <%=endTime %></span>
+                                <button type="button" class="edit">Edit</button>
+                                <input class="hidden" type="time" id="endTime" name="endTime" value="<%= schedule[0].endTime %>">
+                            </li>
+                            <li>
+                                <span id="displayFrequency">Reminders per Day: <%=schedule[0].frequency %></span> 
+                                <button type="button" class="edit">Edit</button>
+                                <input class="hidden" type="number" id="frequency" name="frequency" min="1" value="<%= schedule[0].frequency %>">
+                            </li>
+                            <li>
+                                <span id="displayMinutes">Stretch Duration (mins): <%=schedule[0].minutes %></span>
+                                <button type="button" class="edit">Edit</button>
+                                <input class="hidden" type="number" id="minutes" name="minutes" min="1" value="<%= schedule[0].minutes %>">
+                            </li>
+                        </ul>
+                        <button class="hidden" id="editBtn" type="submit">Edit Schedule</button>
+                    </form> 
+                </div>
+            </div>
+        <%} else{%> 
             <div class="left-bottom">
             <div class="weekly-schedule">
                 <h1 class ='center'>Weekly Schedule</h1>
                 <form action="/schedule" id="workScheduleForm" method="POST">
                     <label for="workDays">Select Work Days:</label>
-                    <select id="workDays" name="workDays[]" multiple>
+                    <select id="workDays" name="workDays[]" multiple required>
                         <option value="Monday">Monday</option>
                         <option value="Tuesday">Tuesday</option>
                         <option value="Wednesday">Wednesday</option>
@@ -130,16 +175,21 @@
                     </select>
                 
                     <label for="startTime">Work Start Time:</label>
-                    <input type="time" id="startTime" name="startTime">
+                    <input type="time" id="startTime" name="startTime" required>
                 
                     <label for="endTime">Work End Time:</label>
-                    <input type="time" id="endTime" name="endTime">
+                    <input type="time" id="endTime" name="endTime" required>
                 
                     <label for="frequency">Reminders per Day:</label>
-                    <input type="number" id="frequency" name="frequency" min="1">
+                    <input type="number" id="frequency" name="frequency" min="1" required>
+
+                    <label for="minutes">How many mins would you like to stretch?:</label>
+                    <input type="number" id="minutes" name="minutes" min="1" required>
                 
-                    <button type="submit">Submit</button>
+                    <button type="submit">Create Schedule</button>
                 </form>
+
+                <%}%>
     <!--             
                 <div class="calendar">
                 <div class="day-and-activity activity-one">

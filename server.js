@@ -59,7 +59,8 @@ app.use("/login", mainRoutes);
 app.use("/signup", mainRoutes);
 app.use("/post", postRoutes);
 app.use("/schedule", postRoutes);
-
+app.use("/editSchedule", postRoutes); 
+app.use("/getStretches", postRoutes); 
 
 
 //Server Running
