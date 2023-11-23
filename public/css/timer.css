@@ -1,0 +1,13 @@
+.countdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: ubuntu mono, consolas, monaco, monospace;
+    font-size: 2em;
+    margin-top: 50px;
+}
+
+.countdown-timer {
+    font-weight: bold;
+    margin-right: 5px;
+}

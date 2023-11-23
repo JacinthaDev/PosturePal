@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 
 const ScheduleSchema = new mongoose.Schema({
+user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+},
+createdAt: {
+    type: Date,
+    default: Date.now,
+},
 days: {
     type: [String],
     required: true,
@@ -32,14 +40,6 @@ frequency: {
 minutes: {
     type: Number,
     required: true,
-},
-user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-},
-createdAt: {
-    type: Date,
-    default: Date.now,
 },
 });
 

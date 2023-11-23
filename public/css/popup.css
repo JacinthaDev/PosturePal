@@ -1,0 +1,94 @@
+
+.popUp {
+    width: 90vw;
+    height: 90vh;
+    z-index: 9999;
+    position: absolute;
+    background-color: rgba(0, 0, 0, .8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+}
+
+.timeToStretch {
+    width: 70vw;
+    max-width: 500px; /* Maximum width */
+    height: auto; /* Adjust height automatically */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stretch-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(184, 176, 226, 0.8);
+    border-radius: 30px 30px 0 0;
+    width: 100%; /* Full width of the parent */
+    padding: 20px;
+}
+
+.stretch-image-container img {
+    width: 80%; /* Responsive image width */
+    max-height: 200px; /* Maximum image height */
+    display: block;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.stretch-image-container h2 {
+    color: white;
+    font-size: 2rem; /* Smaller font size */
+    margin-bottom: 20px;
+}
+
+.countdown {
+    font-size: 1.5rem; /* Adjust font size */
+    color: white;
+    margin-bottom: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: rgba(184, 176, 226, 0.8);
+    border-radius: 0 0 30px 30px;
+    width: 100%; /* Full width of the parent */
+}
+
+.btn {
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    font-size: 1.5rem; /* Adjust button font size */
+}
+
+.btn span.icon {
+    margin-right: 5px;
+}
+
+.skip, .stretch {
+    background-color: red;
+    color: white;
+}
+
+.stretch {
+    background-color: green;
+    margin:10px;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+
+.hidden{
+    display: none;
+}

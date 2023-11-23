@@ -1,6 +1,6 @@
 const Post = require("../models/Post");
 const Schedule = require("../models/Schedule");
-const Comments = require("../models/Comments");
+const Streak = require('../models/Streak');
 
 function convertTo12Hour(time) {
   let [hours, minutes] = time.split(':');
@@ -26,9 +26,13 @@ module.exports = {
   getSchedule: async (req, res) => {
     try {
       const schedule = await Schedule.find({user: req.user.id }).lean();
-      const startTime12hr = convertTo12Hour(schedule[0].startTime);
-      const endTime12hr = convertTo12Hour(schedule[0].endTime);
-      res.render("schedule.ejs", {schedule: schedule, user: req.user, startTime:startTime12hr, endTime:endTime12hr});
+      if (schedule.length >0) {
+        const startTime12hr = convertTo12Hour(schedule[0].startTime);
+        const endTime12hr = convertTo12Hour(schedule[0].endTime);
+        res.render("schedule.ejs", {schedule: schedule, user: req.user, startTime:startTime12hr, endTime:endTime12hr});
+      } else {
+        res.render('schedule.ejs', { schedule: [], user: req.user}); // Pass an empty array if no schedule
+      }
     } catch (err) {
       console.log(err);
     }
@@ -41,22 +45,88 @@ module.exports = {
       console.log(err);
     }
   },
-  createSchedule: async (req, res) => {
+  // In your controllers file
+  createScheduleAndStreak: async (req, res) => {
     try {
-      await Schedule.create({
-        days: req.body.workDays,
-        startTime: req.body.startTime,
-        endTime: req.body.endTime,
-        frequency: req.body.frequency,
-        minutes: req.body.minutes,
-        user: req.user.id,
-      });
-      console.log("Schedule has been added!");
-      res.redirect("/schedule");
+        // Create Schedule
+        const newSchedule = await Schedule.create({
+            days: req.body.workDays,
+            startTime: req.body.startTime,
+            endTime: req.body.endTime,
+            frequency: req.body.frequency,
+            minutes: req.body.minutes,
+            user: req.user.id,
+        });
+        console.log("Schedule has been added!");
+
+        // Create Streak based on the new schedule
+        const dailyGoal = parseInt(req.body.frequency);
+        const weeklyGoal = dailyGoal * req.body.workDays.length;
+        const monthlyGoal = weeklyGoal * 4; // Approximation
+        const numberCompleted = 0
+        const weeklyPercent = numberCompleted / weeklyGoal
+        const monthlyPercent = numberCompleted / monthlyGoal
+
+        await Streak.create({
+            user: req.user.id,
+            dailyGoal: dailyGoal,
+            weeklyGoal: weeklyGoal,
+            monthlyGoal: monthlyGoal,
+            dailyCompleted: numberCompleted,
+            weeklyCompleted: numberCompleted,
+            monthlyCompleted: numberCompleted,
+            weeklyPercent: weeklyPercent,
+            monthlyPercent: monthlyPercent
+        });
+        console.log("Streak has been added!");
+
+        res.redirect("/schedule");
     } catch (err) {
-      console.log(err);
+        console.log("Error in createScheduleAndStreak: ", err);
+        res.status(500).send("An error occurred while creating the schedule and streak.");
     }
-  },
+},
+
+
+//   createSchedule: async (req, res) => {
+//     try {
+//       await Schedule.create({
+//         days: req.body.workDays,
+//         startTime: req.body.startTime,
+//         endTime: req.body.endTime,
+//         frequency: req.body.frequency,
+//         minutes: req.body.minutes,
+//         user: req.user.id,
+//       });
+//       console.log("Schedule has been added!");
+//       res.redirect("/schedule");
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   },
+//   createStreak: async (req, res) => {
+//     try {
+//         const { user, workDays, frequency } = req.body; // Extract data from request
+//         const weeklyGoal = dailyGoal * workDays.length;
+//         const monthlyGoal = weeklyGoal * 4; // Approximation
+
+//         await Streak.create({
+//             user: user,
+//             dailyGoal: frequency,
+//             weeklyGoal: weeklyGoal,
+//             monthlyGoal: monthlyGoal,
+//             dailyCompleted: 0,
+//             weeklyCompleted: 0,
+//             monthlyCompleted: 0,
+//             weeklyPercent: 0,
+//             monthlyPercent: 0,
+//         });
+//       console.log("Streak has been added!");
+//       // res.redirect("/schedule");
+//     } catch (err) {
+//       console.log(err);
+//     }
+// },
   updateSchedule: async (req, res) => {
     try {
 
@@ -85,20 +155,29 @@ module.exports = {
       console.log(err);
     }
   },
-  likePost: async (req, res) => {
+  editStreak: async (req, res) => {
     try {
-      await Post.findOneAndUpdate(
-        { _id: req.params.id },
-        {
-          $inc: { likes: 1 },
+        const streak = await Streak.findOne({ _id: req.user.id });
+        if (!streak) {
+            return res.status(404).json({ message: "Streak not found" });
         }
-      );
-      console.log("Likes +1");
-      res.redirect(`/post/${req.params.id}`);
+
+        streak.dailyCompleted++;
+        streak.weeklyCompleted++;
+        streak.monthlyCompleted++;
+        const weeklyPercent = (streak.weeklyCompleted / streak.weeklyGoal) * 100;
+        const monthlyPercent = (streak.monthlyCompleted / streak.monthlyGoal) * 100;
+
+        await streak.save();
+
+        res.status(200).json(streak);
     } catch (err) {
-      console.log(err);
+        console.log(err);
+        res.status(500).json({ error: "An error occurred while updating the streak." });
     }
-  },
+},
+
+  
   //COMMENTS =====================================================
   
   addComment: async (req, res) => {
