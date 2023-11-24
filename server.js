@@ -57,7 +57,7 @@ app.use(flash());
 app.use("/", mainRoutes);
 app.use("/login", mainRoutes);
 app.use("/signup", mainRoutes);
-app.use("/editStreak", postRoutes);
+app.use("/profile", postRoutes);
 app.use("/schedule", postRoutes);
 app.use("/editSchedule", postRoutes); 
 app.use("/getStretches", postRoutes); 

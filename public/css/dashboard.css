@@ -280,10 +280,13 @@ main {
   margin-top: 20px;
   font-size: 1.3rem;
   font-weight: 700;
+
 }
 
 .calendar {
   margin-top: 10px;
+  overflow: scroll;
+  height: 318px;
 }
 
 .day-and-activity {
@@ -508,10 +511,6 @@ main {
   gap: 15px;
 }
 
-.user-info h4 {
-  margin-left: 40px;
-}
-
 .user-info img {
   width: 40px;
   aspect-ratio: 1/1;
@@ -669,6 +668,8 @@ main {
 .card p {
   font-size: 0.9rem;
   padding: 0 5px 5px;
+  text-align: center;
+  margin-top: 1rem;
 }
 
 @media (max-width: 1500px) {

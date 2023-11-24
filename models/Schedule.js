@@ -37,10 +37,6 @@ frequency: {
     type: Number,
     required: true,
 },
-minutes: {
-    type: Number,
-    required: true,
-},
 });
 
 module.exports = mongoose.model("Schedule", ScheduleSchema);

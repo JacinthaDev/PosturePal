@@ -1,6 +1,6 @@
 
 .popUp {
-    width: 90vw;
+    width: 80vw;
     height: 90vh;
     z-index: 9999;
     position: absolute;
@@ -15,7 +15,7 @@
     width: 70vw;
     max-width: 500px; /* Maximum width */
     height: auto; /* Adjust height automatically */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(70, 58, 110, 0.2);
     border-radius: 30px;
     display: flex;
     flex-direction: column;

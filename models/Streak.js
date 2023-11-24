@@ -35,7 +35,19 @@ const StreakSchema = new mongoose.Schema({
     monthlyPercent: {
         type: Number,
         default: 0
-    }
+    },
+    skippedToday: {
+        type: Number,
+        default: 0
+    },
+    skippedThisWeek: {
+        type: Number,
+        default: 0
+    },
+    skippedThisMonth: {
+        type: Number,
+        default: 0
+    },
 });
 
 module.exports = mongoose.model("Streak", StreakSchema);
