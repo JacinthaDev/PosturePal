@@ -3,6 +3,7 @@
 let reminderInterval
 let now = new Date()
 let upcoming = []
+
 let countdownInterval
 
 // NAVIGATION ======================================================================
@@ -27,6 +28,7 @@ Array.from(editBtn).forEach(function (element) {
         let submitBtn = document.getElementById('editBtn')
         form.classList.toggle('hidden')
         submitBtn.classList.remove('hidden')
+        sessionStorage.clear()
     })
 })
 
@@ -130,8 +132,8 @@ fetch('/getStretches')
                         popUpDiv.classList.remove('hidden')
 
                     }, msTillReminder)
-                    console.log("setTimeout", timeOfReminder, now2, msTillReminder/1000)
-                    console.log(new Date(now2.getTime() + msTillReminder))
+                    //console.log("setTimeout", timeOfReminder, now2, msTillReminder/1000)
+                    //console.log(new Date(now2.getTime() + msTillReminder))
                     upcoming[index][4] = timeOutID
                 }
 
@@ -154,7 +156,11 @@ fetch('/getStretches')
         //CALCULATE THE UPCOMING STRETCHES ======================================================================
 
         function sendVariable(reminderInterval) {
+            if (sessionStorage.getItem('upcoming')){
+                upcoming = JSON.parse(sessionStorage.getItem('upcoming'));
+            } else {
             upcoming = calculateUpcomingStretches(data[0].days, data[0].startTime, data[0].endTime, reminderInterval, data[0].frequency) //needed access to DB info to not repeat code
+            }
         }
 
         function calculateUpcomingStretches(selectedWorkDays, startTime, endTime, frequencyInMins, numStretches) {
@@ -196,45 +202,19 @@ fetch('/getStretches')
         }
 
 
-        //POPULATE UPCOMING STRETCHES DIV ON THE DASHBOARD ======================================================================
 
-
-        // function updateDisplayOfStretches() {
-        //     const nextStretchesDivs = document.getElementsByClassName('day-and-activity')
-        //     Array.from(nextStretchesDivs).forEach(function(element, index) {
-        //         if (index < upcoming.length) {
-        //             let data = upcoming[index]
-        //             let h1 = element.querySelector('.day h1')
-        //             let p = element.querySelector('.day p')
-        //             let h2 = element.querySelector('.activity h2')
-
-        //             let hours = data[2]
-        //             let minutes = data[3]
-        //             let ampm = hours >= 12 ? 'PM' : 'AM'
-        //             hours = hours % 12
-        //             hours = hours ? hours : 12
-        //             minutes = minutes < 10 ? '0' + minutes : minutes
-
-        //             h1.innerText = `${data[0]}`
-        //             p.innerText = `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][data[1]]}`
-        //             h2.innerText = `${hours}:${minutes} ${ampm}`
-        //         }
-        //     })
-        // }
 
         updateDisplayOfStretches()
     })
 
 
-
+ //POPULATE UPCOMING STRETCHES DIV ON THE DASHBOARD ======================================================================
 
 
 function updateDisplayOfStretches() {
     const nextStretchesDivs = document.getElementsByClassName('day-and-activity')
     Array.from(nextStretchesDivs).forEach(function (element, index) {
-        console.log(upcoming)
         let data = upcoming[index]
-        console.log(index, upcoming, data)
         let h1 = element.querySelector('.day h1')
         let p = element.querySelector('.day p')
         let h2 = element.querySelector('.activity h2')
@@ -254,9 +234,6 @@ function updateDisplayOfStretches() {
         } else{
 
             element.remove()
-            // h1.innerText = ""
-            // p.innerText = ""
-            // h2.innerText = ""
 
         }
     })
@@ -273,26 +250,42 @@ skipBtn.addEventListener('click', function () {
 
 Array.from(document.getElementsByClassName('upcomingSkip')).forEach(function (element, index) {
     element.addEventListener('click', function () {
-        console.log(element.id, upcoming)
         clearTimeout(upcoming[index][4])
         upcoming.splice(Number(element.id), 1)
+        sessionStorage.setItem('upcoming', JSON.stringify(upcoming))
+
+
         updateDisplayOfStretches()
-        console.log(upcoming)
         skippedStretches()
-        const skippedWeek = document.getElementById('skippedWeek')
-        const skippedWeekCount = Number(skippedWeek.innerText)
-        skippedWeek.innerText = skippedWeekCount +1
+        incrementCount()
     })
 })
 
+
+// function incrementCount(){
+//     const skippedWeek = document.getElementById('skippedWeek')
+//     const skippedWeekCount = Number(skippedWeek.innerText)
+//     const skippedDay = document.getElementById('skippedDay')
+//     const skippedDayCount = Number(skippedDay.innerText)
+//     const skippedMonth = document.getElementById('skippedMonth')
+//     const skippedMonthCount = Number(skippedMonth.innerText)
+//     skippedWeek.innerText = skippedWeekCount +1
+//     skippedDay.innerText = skippedDayCount +1
+//     skippedMonth.innerText = skippedMonthCount +1
+// }
+
 //START UPCOMING STRETCH ======================================================================
 
-Array.from(document.getElementsByClassName('upcomingStretch')).forEach(function (element) {
+Array.from(document.getElementsByClassName('upcomingStretch')).forEach(function (element, index) {
     element.addEventListener('click', function () {
+        clearTimeout(upcoming[index][4])
+        upcoming.splice(Number(element.id), 1)
+        sessionStorage.setItem('upcoming', JSON.stringify(upcoming))
+
+        updateDisplayOfStretches()
         shuffle();
         const popUpDiv = document.querySelector('.popUp');
         popUpDiv.classList.remove('hidden');
-
     })
 })
 
@@ -314,7 +307,7 @@ function startCountdown() {
     const countdownElement = document.querySelector('.countdown-timer')
     const timesUp = document.querySelector('.timesUp')
     const clear = document.querySelector('.clear')
-    let remainingSeconds = 30
+    let remainingSeconds = 10
 
     clearInterval(countdownInterval)
     updateDisplay(0, remainingSeconds)
@@ -392,7 +385,7 @@ function skippedStretches() {
     })
         .then(() => {
 
-            // window.location.reload()
+            window.location.reload()
         })
 
 }
