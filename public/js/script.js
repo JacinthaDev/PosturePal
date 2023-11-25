@@ -119,13 +119,58 @@ fetch('/getStretches')
 
                 sendVariable(reminderInterval)//get the ReminderInterval variable out so other functions can use it
 
+
+                //before gpt
+                // upcoming.forEach((element, index) =>{
+                //     const timeOfReminder = new Date()
+                //     // const now2 = new Date()
+                //     // now2.setHours(startHours)
+                //     // now2.setMinutes(startMinutes)
+                //     timeOfReminder.setHours(upcoming[index][2])
+                //     timeOfReminder.setMinutes(upcoming[index][3])
+                //     const msTillReminder =  timeOfReminder.getTime() - now.getTime()
+                //     console.log(msTillReminder)
+                //     console.log(upcoming)
+                //     const timeOutID = setTimeout(() => {
+                //         shuffle()
+                //         const popUpDiv = document.querySelector('.popUp')
+                //         popUpDiv.classList.remove('hidden')
+
+                //     }, msTillReminder)
+                //     upcoming[index][4] = timeOutID
+                // }
+
+
+                //gpt
+                // upcoming.forEach((element, index) => {
+                //     const timeOfReminder = new Date();
+                //     timeOfReminder.setHours(upcoming[index][2], upcoming[index][3], 0, 0);
+                
+                //     const msTillReminder = timeOfReminder.getTime() - now.getTime();
+                    
+                //     if (msTillReminder > 0) {
+                //         console.log("Setting reminder for:", msTillReminder);
+                //         const timeOutID = setTimeout(() => {
+                //             shuffle();
+                //             const popUpDiv = document.querySelector('.popUp');
+                //             popUpDiv.classList.remove('hidden');
+                //         }, msTillReminder);
+                //         upcoming[index][4] = timeOutID;
+                //     } else {
+                //         console.log("Reminder time has passed:", msTillReminder);
+                //     }
+                // }
+
+                // )
+
+
                 upcoming.forEach((element, index) =>{
                     const timeOfReminder = new Date()
                     const now2 = new Date()
                     timeOfReminder.setHours(upcoming[index][2])
                     timeOfReminder.setMinutes(upcoming[index][3])
                     const msTillReminder =  timeOfReminder.getTime() - now2.getTime()
-                
+                    console.log(msTillReminder)
                     const timeOutID = setTimeout(() => {
                         shuffle()
                         const popUpDiv = document.querySelector('.popUp')
@@ -139,13 +184,6 @@ fetch('/getStretches')
 
                 )
 
-                //Set interval for reminders
-                // return setInterval(() => {
-                //     shuffle()
-                //     const popUpDiv = document.querySelector('.popUp')
-                //     popUpDiv.classList.remove('hidden')
-                // }, reminderInterval * 60 * 1000) // convert minutes to milliseconds
-
             }
 
             return null //No reminders scheduled if not within work hours
@@ -156,11 +194,12 @@ fetch('/getStretches')
         //CALCULATE THE UPCOMING STRETCHES ======================================================================
 
         function sendVariable(reminderInterval) {
-            if (sessionStorage.getItem('upcoming')){
-                upcoming = JSON.parse(sessionStorage.getItem('upcoming'));
+
+            if (sessionStorage.getItem('upcoming') !== null && JSON.parse(sessionStorage.getItem('upcoming')).length > 0){
+                upcoming = JSON.parse(sessionStorage.getItem('upcoming'))
             } else {
-            upcoming = calculateUpcomingStretches(data[0].days, data[0].startTime, data[0].endTime, reminderInterval, data[0].frequency) //needed access to DB info to not repeat code
-            }
+            upcoming = calculateUpcomingStretches(data[0].days, data[0].startTime, data[0].endTime, reminderInterval, data[0].frequency) //needed access to DB info to not repeat code  
+        }
         }
 
         function calculateUpcomingStretches(selectedWorkDays, startTime, endTime, frequencyInMins, numStretches) {
@@ -198,14 +237,35 @@ fetch('/getStretches')
                     addStretchesForDay(now)
                 }
             }
+            sessionStorage.setItem('calculatedUpcomingStretches', JSON.stringify(tempUpcoming))
             return tempUpcoming
         }
-
-
-
-
         updateDisplayOfStretches()
     })
+
+
+    function hasTimePassed() {
+        let upcoming2 = JSON.parse(sessionStorage.getItem('upcoming'))
+        if (!upcoming2 || upcoming2.length === 0) {
+            return false;
+        }
+
+        let hour = upcoming2[0][2];
+        let minute = upcoming2[0][3];
+    
+        if (now.getHours() >= hour && now.getMinutes() >= minute) {
+            upcoming2.shift();
+            sessionStorage.setItem('upcoming', JSON.stringify(upcoming2));
+            return true;
+        }
+    
+        return false;
+    }
+    
+    hasTimePassed()
+    
+
+
 
 
  //POPULATE UPCOMING STRETCHES DIV ON THE DASHBOARD ======================================================================
@@ -239,8 +299,6 @@ function updateDisplayOfStretches() {
     })
 }
 
-
-
 //SKIP STRETCH ======================================================================
 
 let skipBtn = document.querySelector('.skip')
@@ -251,44 +309,30 @@ skipBtn.addEventListener('click', function () {
 Array.from(document.getElementsByClassName('upcomingSkip')).forEach(function (element, index) {
     element.addEventListener('click', function () {
         clearTimeout(upcoming[index][4])
-        upcoming.splice(Number(element.id), 1)
+        console.log(upcoming)
+        upcoming.splice(Number(element.dataset.number), 1)
         sessionStorage.setItem('upcoming', JSON.stringify(upcoming))
-
-
+        console.log(JSON.parse(sessionStorage.getItem('upcoming')))
         updateDisplayOfStretches()
         skippedStretches()
-        incrementCount()
     })
 })
 
-
-// function incrementCount(){
-//     const skippedWeek = document.getElementById('skippedWeek')
-//     const skippedWeekCount = Number(skippedWeek.innerText)
-//     const skippedDay = document.getElementById('skippedDay')
-//     const skippedDayCount = Number(skippedDay.innerText)
-//     const skippedMonth = document.getElementById('skippedMonth')
-//     const skippedMonthCount = Number(skippedMonth.innerText)
-//     skippedWeek.innerText = skippedWeekCount +1
-//     skippedDay.innerText = skippedDayCount +1
-//     skippedMonth.innerText = skippedMonthCount +1
-// }
 
 //START UPCOMING STRETCH ======================================================================
 
 Array.from(document.getElementsByClassName('upcomingStretch')).forEach(function (element, index) {
     element.addEventListener('click', function () {
         clearTimeout(upcoming[index][4])
-        upcoming.splice(Number(element.id), 1)
+        upcoming.splice(Number(element.dataset.number), 1)
+        console.log(upcoming)
         sessionStorage.setItem('upcoming', JSON.stringify(upcoming))
-
         updateDisplayOfStretches()
-        shuffle();
-        const popUpDiv = document.querySelector('.popUp');
-        popUpDiv.classList.remove('hidden');
+        shuffle()
+        const popUpDiv = document.querySelector('.popUp')
+        popUpDiv.classList.remove('hidden')
     })
 })
-
 
 
 // START TIMER  ======================================================================
@@ -354,15 +398,13 @@ function updateDisplay(minutes, seconds) {
 //SHUFFLE THE IMAGES ======================================================================
 
 function shuffle() {
-    let number = Math.round(Math.random() * 6)
-    let previousNumber = 10
-    if (number !== previousNumber) {
-        document.querySelector('.popUpStretch').src = `${imageArray[number][0]}`
-        document.querySelector('.popUpStretch').alt = `${imageArray[number][1]}`
-        previousNumber = number
-    } else {
-        shuffle()
-    }
+    let storedValue = sessionStorage.getItem('imageArray')
+    let imageArray2 = storedValue !== null ? JSON.parse(storedValue) : imageArray
+    let item = imageArray2.shift()
+    imageArray2.push(item)
+    document.querySelector('.popUpStretch').src = `${imageArray2[0][0]}`
+    document.querySelector('.popUpStretch').alt = `${imageArray2[0][1]}`
+    sessionStorage.setItem('imageArray', JSON.stringify(imageArray2))
 }
 
 // UPDATE STREAK ======================================================================
@@ -389,3 +431,20 @@ function skippedStretches() {
         })
 
 }
+
+
+
+
+
+
+Notification.requestPermission().then(permission => {
+    if (permission === 'granted') {
+        new Notification("Test Notification", {
+            body: "This is a test!"
+            // icon: "../imgs/stretch.png"
+        });
+    }
+});
+
+
+

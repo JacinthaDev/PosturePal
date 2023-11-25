@@ -42,24 +42,19 @@ ul.edit-list li {
   cursor: pointer;
 }
 
-/* Assuming that .hidden class makes elements not visible */
-
-/* CSS to show the hidden input in the middle when the edit button is clicked */
-/* Assuming some JS will toggle a class to show the input */
 .show-input {
-  display: block; /* Show the input */
-  margin: 0 auto; /* Center the input */
-  flex: 1 0 auto; /* Allow it to grow and take up available space */
+  display: block;
+  margin: 0 auto; 
+  flex: 1 0 auto; 
 }
 
 #scheduleDisplay{
   background-color: rgb(201, 195, 225);
   margin-top:1rem ;
-  border-radius: 10px; /* Rounds the corners */
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2), /* Lower shadow */
-              0px 10px 20px rgba(0, 0, 0, 0.15), /* Further shadow for more depth */
-              0px 15px 30px rgba(0, 0, 0, 0.1); /* Even further shadow for additional depth */
-  /* Adjust the px values and rgba colors as needed to suit your design */
+  border-radius: 10px; 
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2), 
+              0px 10px 20px rgba(0, 0, 0, 0.15), 
+              0px 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .edit-list input{
@@ -71,5 +66,5 @@ ul.edit-list li {
 }
 
 .hidden {
-  display: none; /* Hide the elements */
+  display: none; 
 }

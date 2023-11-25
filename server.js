@@ -9,7 +9,7 @@ const flash = require("express-flash");
 const logger = require("morgan");
 const connectDB = require("./config/database");
 const mainRoutes = require("./routes/main");
-const postRoutes = require("./routes/posts");
+const stretchRoutes = require("./routes/stretches");
 
 //Use .env file in config folder
 require("dotenv").config({ path: "./config/.env" });
@@ -57,10 +57,10 @@ app.use(flash());
 app.use("/", mainRoutes);
 app.use("/login", mainRoutes);
 app.use("/signup", mainRoutes);
-app.use("/profile", postRoutes);
-app.use("/schedule", postRoutes);
-app.use("/editSchedule", postRoutes); 
-app.use("/getStretches", postRoutes); 
+app.use("/profile", stretchRoutes);
+app.use("/schedule", stretchRoutes);
+app.use("/editSchedule", stretchRoutes); 
+app.use("/getStretches", stretchRoutes); 
 
 
 //Server Running

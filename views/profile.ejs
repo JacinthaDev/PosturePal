@@ -27,15 +27,6 @@
             </a>
             </li>
 
-            <!-- <li class="nav-item">
-            <b></b>
-            <b></b>
-            <a href="#">
-                <i class="fa fa-user nav-icon"></i>
-                <span class="nav-text">Profile</span>
-            </a>
-            </li> -->
-
             <li class="nav-item">
             <b></b>
             <b></b>
@@ -45,14 +36,6 @@
             </a>
             </li>
 
-            <!-- <li class="nav-item">
-            <b></b>
-            <b></b>
-            <a href="#">
-                <i class="fa fa-person-running nav-icon"></i>
-                <span class="nav-text">Activities</span>
-            </a>
-            </li> -->
 
             <li class="nav-item">
             <b></b>
@@ -153,8 +136,8 @@
                         <div class="activity">
                         <h2></h2>
                         </div>
-                        <button class="btn upcomingStretch">Stretch Now</button>
-                        <button id="0" class="btn upcomingSkip">✕</button>
+                        <button data-number="0" class="btn upcomingStretch">Stretch Now</button>
+                        <button data-number="0" class="btn upcomingSkip">✕</button>
                     </div>
         
                     <div class="day-and-activity activity-two">
@@ -165,8 +148,8 @@
                         <div class="activity">
                         <h2></h2>
                         </div>
-                        <button class="btn upcomingStretch">Stretch Now</button>
-                        <button id="1" class="btn upcomingSkip">✕</button>
+                        <button data-number="1" class="btn upcomingStretch">Stretch Now</button>
+                        <button data-number="1" class="btn upcomingSkip">✕</button>
                     </div>
         
                     <div class="day-and-activity activity-three">
@@ -177,8 +160,8 @@
                         <div class="activity">
                         <h2></h2>
                         </div>
-                        <button class="btn upcomingStretch">Stretch Now</button>
-                        <button id="2" class="btn upcomingSkip">✕</button>
+                        <button data-number="2" class="btn upcomingStretch">Stretch Now</button>
+                        <button data-number="2" class="btn upcomingSkip">✕</button>
                     </div>
         
         
@@ -190,8 +173,8 @@
                         <div class="activity">
                         <h2></h2>
                         </div>
-                        <button class="btn upcomingStretch">Stretch Now</button>
-                        <button id="3" class="btn upcomingSkip">✕</button>
+                        <button data-number="3" class="btn upcomingStretch">Stretch Now</button>
+                        <button data-number="3" class="btn upcomingSkip">✕</button>
                     </div>
         
                     <div class="day-and-activity activity-one">
@@ -202,8 +185,8 @@
                         <div class="activity">
                         <h2></h2>
                         </div>
-                        <button class="btn upcomingStretch">Stretch Now</button>
-                        <button id="4" class="btn upcomingSkip">✕</button>
+                        <button data-number="4" class="btn upcomingStretch">Stretch Now</button>
+                        <button data-number="4" class="btn upcomingSkip">✕</button>
                     </div>
         
                     <div class="day-and-activity activity-two">
@@ -214,8 +197,8 @@
                         <div class="activity">
                         <h2></h2>
                         </div>
-                        <button class="btn upcomingStretch">Stretch Now</button>
-                        <button id="5" class="btn upcomingSkip">✕</button>
+                        <button data-number="5" class="btn upcomingStretch">Stretch Now</button>
+                        <button data-number="5" class="btn upcomingSkip">✕</button>
                     </div>
         
                 
@@ -223,7 +206,7 @@
 
 </div>
         </div>
-        <%if(streak[0].skippedThisMonth > 0){ %> 
+        <%if(streak.length >0 && streak[0].skippedThisMonth > 0){ %> 
             <div class="personal-bests">
                 <h1>Skipped Stretches</h1>
                 <div class="personal-bests-container">
@@ -276,40 +259,6 @@
             <h4>Welcome, <%= user.userName%></h4>
             <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/40b7cce2-c289-4954-9be0-938479832a9c" alt="user" />
             </div>
-<!-- 
-            <div class="active-calories">
-            <h1 style="align-self: flex-start">Your Streak</h1>
-            <div class="active-calories-container">
-                <div class="box" style="--i: 85%">
-                <div class="circle">
-                    <h2>85<small>%</small></h2>
-                </div>
-                </div>
-                <div class="calories-content">
-                <p><span>Today:</span> 3/3</p>
-                <p><span>This Week:</span> 12/15</p>
-                <p><span>This Month:</span> 51/60</p>
-                </div>
-            </div>
-            </div> -->
-
-            <!-- <div class="mobile-personal-bests">
-            <h1>Personal Bests</h1>
-            <div class="personal-bests-container">
-                <div class="best-item box-one">
-                <p>Fastest 5K Run: 22min</p>
-                <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/05dfc444-9ed3-44cc-96af-a9cf195f5820" alt="" />
-                </div>
-                <div class="best-item box-two">
-                <p>Longest Distance Cycling: 4 miles</p>
-                <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/9ca170e9-1252-4fa6-8677-36493540c1f2" alt="" />
-                </div>
-                <div class="best-item box-three">
-                <p>Longest Roller-Skating: 2 hours</p>
-                <img src="https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/262d1611-ed4c-4297-981c-480cf7f95714" alt="" />
-                </div>
-            </div>
-            </div> -->
 
             <%if(streak && streak.length === 1){ %> 
                 <div class="friends-activity">
