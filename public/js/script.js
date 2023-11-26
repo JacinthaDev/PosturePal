@@ -84,6 +84,12 @@ fetch('/getStretches')
 
         // SEND REMINDER TO STRETCH ======================================================================
 
+        //console.log(data[0].days)
+
+
+
+
+
         shouldSendReminder(data[0].days, data[0].startTime, data[0].endTime, data[0].frequency)
         function shouldSendReminder(selectedDays, startTime, endTime, numReminders) {
             const dayNameToNumber = {
@@ -118,61 +124,18 @@ fetch('/getStretches')
                 const reminderInterval = numReminders === 1 ? workDurationInMinutes / 2 : workDurationInMinutes / numReminders
 
                 sendVariable(reminderInterval)//get the ReminderInterval variable out so other functions can use it
-
-
-                //before gpt
-                // upcoming.forEach((element, index) =>{
-                //     const timeOfReminder = new Date()
-                //     // const now2 = new Date()
-                //     // now2.setHours(startHours)
-                //     // now2.setMinutes(startMinutes)
-                //     timeOfReminder.setHours(upcoming[index][2])
-                //     timeOfReminder.setMinutes(upcoming[index][3])
-                //     const msTillReminder =  timeOfReminder.getTime() - now.getTime()
-                //     console.log(msTillReminder)
-                //     console.log(upcoming)
-                //     const timeOutID = setTimeout(() => {
-                //         shuffle()
-                //         const popUpDiv = document.querySelector('.popUp')
-                //         popUpDiv.classList.remove('hidden')
-
-                //     }, msTillReminder)
-                //     upcoming[index][4] = timeOutID
-                // }
-
-
-                //gpt
-                // upcoming.forEach((element, index) => {
-                //     const timeOfReminder = new Date();
-                //     timeOfReminder.setHours(upcoming[index][2], upcoming[index][3], 0, 0);
-                
-                //     const msTillReminder = timeOfReminder.getTime() - now.getTime();
-                    
-                //     if (msTillReminder > 0) {
-                //         console.log("Setting reminder for:", msTillReminder);
-                //         const timeOutID = setTimeout(() => {
-                //             shuffle();
-                //             const popUpDiv = document.querySelector('.popUp');
-                //             popUpDiv.classList.remove('hidden');
-                //         }, msTillReminder);
-                //         upcoming[index][4] = timeOutID;
-                //     } else {
-                //         console.log("Reminder time has passed:", msTillReminder);
-                //     }
-                // }
-
-                // )
-
-
+                //console.log(startDate)
+                //console.log(upcoming)
                 upcoming.forEach((element, index) =>{
                     const timeOfReminder = new Date()
                     const now2 = new Date()
                     timeOfReminder.setHours(upcoming[index][2])
                     timeOfReminder.setMinutes(upcoming[index][3])
                     const msTillReminder =  timeOfReminder.getTime() - now2.getTime()
-                    console.log(msTillReminder)
+                
                     const timeOutID = setTimeout(() => {
                         shuffle()
+                        askNotificationPermission()
                         const popUpDiv = document.querySelector('.popUp')
                         popUpDiv.classList.remove('hidden')
 
@@ -180,9 +143,14 @@ fetch('/getStretches')
                     //console.log("setTimeout", timeOfReminder, now2, msTillReminder/1000)
                     //console.log(new Date(now2.getTime() + msTillReminder))
                     upcoming[index][4] = timeOutID
-                }
+                })
 
-                )
+                //Set interval for reminders
+                // return setInterval(() => {
+                //     shuffle()
+                //     const popUpDiv = document.querySelector('.popUp')
+                //     popUpDiv.classList.remove('hidden')
+                // }, reminderInterval * 60 * 1000) // convert minutes to milliseconds
 
             }
 
@@ -194,12 +162,11 @@ fetch('/getStretches')
         //CALCULATE THE UPCOMING STRETCHES ======================================================================
 
         function sendVariable(reminderInterval) {
-
-            if (sessionStorage.getItem('upcoming') !== null && JSON.parse(sessionStorage.getItem('upcoming')).length > 0){
-                upcoming = JSON.parse(sessionStorage.getItem('upcoming'))
+            if (sessionStorage.getItem('upcoming')){
+                upcoming = JSON.parse(sessionStorage.getItem('upcoming'));
             } else {
-            upcoming = calculateUpcomingStretches(data[0].days, data[0].startTime, data[0].endTime, reminderInterval, data[0].frequency) //needed access to DB info to not repeat code  
-        }
+            upcoming = calculateUpcomingStretches(data[0].days, data[0].startTime, data[0].endTime, reminderInterval, data[0].frequency) //needed access to DB info to not repeat code
+            }
         }
 
         function calculateUpcomingStretches(selectedWorkDays, startTime, endTime, frequencyInMins, numStretches) {
@@ -212,10 +179,20 @@ fetch('/getStretches')
             function addStretchesForDay(day) {
                 let start = new Date(day.getFullYear(), day.getMonth(), day.getDate(), parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]))
                 let end = new Date(day.getFullYear(), day.getMonth(), day.getDate(), parseInt(endTime.split(':')[0]), parseInt(endTime.split(':')[1]))
-                let stretchTime = new Date(Math.max(start, now))
+                let stretchTime = new Date(start)
+                //console.log("STRETCH 1" , stretchTime)
+                // console.log("STRETCH TIME",stretchTime)
+                // console.log("START", start)
+                // let frequencyInMs= (end - start)/frequencyInMins
+                
+                
+                // let totalMS = start.getTime() + frequencyInMs
+                // console.log('START PLUS', start.getTime() + frequencyInMs)
+                // console.log(new Date(totalMS))
 
-                while (tempUpcoming.length < numStretches && stretchTime <= end) {
-                    if (stretchTime > now) {
+
+                while ((tempUpcoming.length < numStretches) && (stretchTime <= end)) {
+                    if ((stretchTime > now) ) {
                         tempUpcoming.push([
                             stretchTime.getDate(),
                             stretchTime.getDay(),
@@ -223,7 +200,9 @@ fetch('/getStretches')
                             stretchTime.getMinutes()
                         ])
                     }
+
                     stretchTime = new Date(stretchTime.getTime() + frequencyInMins * 60000)
+                
                 }
             }
 
@@ -231,17 +210,153 @@ fetch('/getStretches')
                 addStretchesForDay(now)
             }
 
-            if (tempUpcoming.length < numStretches) {
-                now.setDate(now.getDate() + 1)
-                if (isWorkday(now.getDay())) {
-                    addStretchesForDay(now)
-                }
-            }
-            sessionStorage.setItem('calculatedUpcomingStretches', JSON.stringify(tempUpcoming))
+            //if (tempUpcoming.length < numStretches) {
+              //  now.setDate(now.getDate() + 1)
+            //  if (isWorkday(now.getDay())) {
+            //         addStretchesForDay(now)
+            //     }
+            //}
             return tempUpcoming
         }
+
+
+
+
         updateDisplayOfStretches()
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///oldddd
+
+        
+    //     shouldSendReminder(data[0].days, data[0].startTime, data[0].endTime, data[0].frequency)
+    //     function shouldSendReminder(selectedDays, startTime, endTime, numReminders) {
+    //         const dayNameToNumber = {
+    //             "Sunday": 0,
+    //             "Monday": 1,
+    //             "Tuesday": 2,
+    //             "Wednesday": 3,
+    //             "Thursday": 4,
+    //             "Friday": 5,
+    //             "Saturday": 6
+    //         }
+    //         const todayNumber = now.getDay()
+
+    //         // Change days to corresponding Date object number 
+    //         const selectedDayNumbers = selectedDays.map(dayName => dayNameToNumber[dayName])
+    //         if (!selectedDayNumbers.includes(todayNumber)) { //If today is not a work day
+    //             return false
+    //         }
+
+    //         // Parse start and end times
+    //         const [startHours, startMinutes] = startTime.split(':').map(Number)
+    //         const [endHours, endMinutes] = endTime.split(':').map(Number)
+
+    //         // Convert start and end times to Date objects
+    //         const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHours, startMinutes)
+    //         const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), endHours, endMinutes)
+
+    //         // Check if current time is within work hours
+    //         if (now >= startDate && now <= endDate) {
+
+    //             const workDurationInMinutes = (endDate - startDate) / (60 * 1000) // convert milliseconds to minutes
+    //             const reminderInterval = numReminders === 1 ? workDurationInMinutes / 2 : workDurationInMinutes / numReminders
+
+    //             sendVariable(reminderInterval)//get the ReminderInterval variable out so other functions can use it
+
+
+    //             upcoming.forEach((element, index) =>{
+    //                 let now3 = new Date()
+    //                 const timeOfReminder = new Date()
+    //                 const now = new Date()
+    //                 timeOfReminder.setHours(upcoming[index][2])
+    //                 timeOfReminder.setMinutes(upcoming[index][3])
+    //                 const msTillReminder =  timeOfReminder.getTime() - now.getTime()
+    //                 const timeOutID = setTimeout(() => {
+    //                     shuffle()
+    //                     const popUpDiv = document.querySelector('.popUp')
+    //                     popUpDiv.classList.remove('hidden')
+
+    //                 }, msTillReminder)
+    //                 upcoming[index][4] = timeOutID
+    //             }
+
+    //             )
+
+    //         }
+
+    //         return null //No reminders scheduled if not within work hours
+
+    //     }
+
+
+    //     //CALCULATE THE UPCOMING STRETCHES ======================================================================
+
+    //     function sendVariable(reminderInterval) {
+
+    //         if (sessionStorage.getItem('upcoming') !== null && JSON.parse(sessionStorage.getItem('upcoming')).length > 0){
+    //             console.log(JSON.parse(sessionStorage.getItem('upcoming')))
+    //             console.log('yes')
+    //             upcoming = JSON.parse(sessionStorage.getItem('upcoming'))
+    //         } else {
+    //             console.log('no')
+    //         upcoming = calculateUpcomingStretches(data[0].days, data[0].startTime, data[0].endTime, reminderInterval, data[0].frequency) //needed access to DB info to not repeat code  
+    //     }
+    //     }
+
+    //     function calculateUpcomingStretches(selectedWorkDays, startTime, endTime, frequencyInMins, numStretches) {
+    //         let tempUpcoming = []
+
+    //         function isWorkday(day) {
+    //             return selectedWorkDays.includes(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day])
+    //         }
+
+    //         function addStretchesForDay(day) {
+    //             let start = new Date(day.getFullYear(), day.getMonth(), day.getDate(), parseInt(startTime.split(':')[0]), parseInt(startTime.split(':')[1]))
+    //             let end = new Date(day.getFullYear(), day.getMonth(), day.getDate(), parseInt(endTime.split(':')[0]), parseInt(endTime.split(':')[1]))
+    //             let stretchTime = new Date(Math.max(start, now))
+
+    //             while (tempUpcoming.length < numStretches + 1  &&stretchTime <= end) {
+    //                 if (stretchTime > now) {
+    //                     tempUpcoming.push([
+    //                         stretchTime.getDate(),
+    //                         stretchTime.getDay(),
+    //                         stretchTime.getHours(),
+    //                         stretchTime.getMinutes()
+    //                     ])
+    //                 }
+    //                 console.log(tempUpcoming)
+    //                 stretchTime = new Date(stretchTime.getTime() + frequencyInMins * 60000)
+    //             }
+    //         }
+    //         console.log(now)
+    //         if (isWorkday(now.getDay())) {
+    //             addStretchesForDay(now)
+    //         }
+    //         // if (tempUpcoming.length < numStretches) {
+    //         //     now.setDate(now.getDate() + 1)
+
+    //             if (isWorkday(now.getDay())) {
+    //                 addStretchesForDay(now)
+    //             }
+    //         // }
+    //         sessionStorage.setItem('calculatedUpcomingStretches', JSON.stringify(tempUpcoming))
+    //         return tempUpcoming
+    //     }
+    //     updateDisplayOfStretches()
+    // })
 
 
     function hasTimePassed() {
@@ -309,10 +424,8 @@ skipBtn.addEventListener('click', function () {
 Array.from(document.getElementsByClassName('upcomingSkip')).forEach(function (element, index) {
     element.addEventListener('click', function () {
         clearTimeout(upcoming[index][4])
-        console.log(upcoming)
         upcoming.splice(Number(element.dataset.number), 1)
         sessionStorage.setItem('upcoming', JSON.stringify(upcoming))
-        console.log(JSON.parse(sessionStorage.getItem('upcoming')))
         updateDisplayOfStretches()
         skippedStretches()
     })
@@ -325,7 +438,6 @@ Array.from(document.getElementsByClassName('upcomingStretch')).forEach(function 
     element.addEventListener('click', function () {
         clearTimeout(upcoming[index][4])
         upcoming.splice(Number(element.dataset.number), 1)
-        console.log(upcoming)
         sessionStorage.setItem('upcoming', JSON.stringify(upcoming))
         updateDisplayOfStretches()
         shuffle()
@@ -436,15 +548,36 @@ function skippedStretches() {
 
 
 
+// Notification.requestPermission().then(permission => {
+//     if (permission === 'granted') {
+//         console.log(permission)
+//         // new Notification("Test Notification", {
+//         //     body: "This is a test!",
+//         //     icon: "../imgs/stretch.png"
+//         // });
+//     }
+// });
 
-Notification.requestPermission().then(permission => {
-    if (permission === 'granted') {
-        new Notification("Test Notification", {
-            body: "This is a test!"
-            // icon: "../imgs/stretch.png"
-        });
+
+document.querySelector('.hi').addEventListener('click', askNotificationPermission)
+
+function askNotificationPermission() {
+    // Function to handle the permission result
+    function handlePermission(permission) {
+        if (permission === "granted") {
+            const text = `HEY! It's time to stretch`;
+            const img = "../imgs/stretch.png";
+            // Create a notification here after permission is granted
+            const notification = new Notification("PosturePal", { body: text, icon: img });
+            console.log(notification)
+        }
     }
-});
 
+    if (!("Notification" in window)) {
+        console.log("This browser does not support notifications.");
+    } else {
+        Notification.requestPermission().then(handlePermission);
+    }
+}
 
 
