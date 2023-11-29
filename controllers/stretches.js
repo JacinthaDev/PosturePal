@@ -10,7 +10,7 @@ function convertTo12Hour(time) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-
+// FUNCTIONS ====================================================
 async function resetDailyStreaks() {
   try {
       await Streak.updateMany({}, { 
@@ -56,7 +56,7 @@ cron.schedule('0 0 1 * *', resetMonthlyStreaks);
 
 module.exports = {
 
-  //SKIPPED STRETCHES ===============================================================
+  //LOAD HOMEPAGE ===============================================================
   getProfile: async (req, res) => {
     try {
       const streak = await Streak.find({ user: req.user.id }).lean();
@@ -171,8 +171,6 @@ module.exports = {
       streak.monthlyPercent = Math.floor((streak.monthlyCompleted / streak.monthlyGoal) * 100);
 
       await streak.save();
-
-
       res.redirect("/schedule"); 
   } catch (err) {
       console.error("Error in updateScheduleAndStreak: ", err);

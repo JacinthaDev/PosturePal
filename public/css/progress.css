@@ -1,3 +1,4 @@
+/* Progress circle from: https://codepen.io/alvaromontoro/pen/poWgdVV  */
 @keyframes progress {
     0% { --percentage: 0; }
     100% { --percentage: var(--value); }
