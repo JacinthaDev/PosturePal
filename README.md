@@ -1,6 +1,5 @@
 # 🙆🏽‍♀️ Posture Pal
 
-<img width="720" alt="PosturePal Logo" src="/public/imgs/stretch.png">
 <img width="720" alt="PosturePal Homepage" src="/public/imgs/PosturePalHomepage.png">
 <img width="720" alt="PosturePal Stretch Notification" src="/public/imgs/TimeToStretch.png">
 
@@ -24,7 +23,6 @@ Create a .env file in config folder and add the following as key = value
 PORT = 2121 (can be any port example: 3000)
 DB_STRING = your database URI
 
-Run
 Run npm start
 
 
