@@ -6,6 +6,7 @@ const stretchesController = require("../controllers/stretches");
 const { ensureAuth, ensureGuest } = require("../middleware/auth");
 
 //Main Routes - simplified for now
+router.get("/", authController.mockLogin) // Automatically log in when visiting the root
 router.get("/", homeController.getIndex);
 router.get("/profile", ensureAuth, stretchesController.getProfile);
 router.get("/schedule", ensureAuth, stretchesController.getSchedule);

@@ -6,12 +6,17 @@ exports.getLogin = (req, res) => {
   if (req.user) {
     return res.redirect("/profile2");
   }
+  req.flash("User not found", { msg: "Try again or create an account" });
+  res.render("index.ejs", {
+    title: "Home Page",
+  });
+};
 
+exports.mockLogin = (req, res, next) => {
   const mockUser = {
-    email: "abc@gmail.com",
+    email: "abc@gmail.com", 
     password: "12345678" 
   };
-
 
   passport.authenticate("local", (err, user, info) => {
     if (err) {
@@ -25,10 +30,12 @@ exports.getLogin = (req, res) => {
       if (err) {
         return next(err);
       }
+      
       res.redirect("/profile");
     });
-  })({ body: mockUser }, res, next);
+  })({ body: mockUser }, res, next); 
 };
+
 
 exports.postLogin = (req, res, next) => {
   const validationErrors = [];
